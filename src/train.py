@@ -1,3 +1,4 @@
+from copyreg import pickle
 from pyexpat import model
 import numpy as np
 import pandas as pd
@@ -12,7 +13,7 @@ import config
 import model_dispatcher
 import argparse
 import joblib
-
+import pickle
 
 def run(fold,model):
 
@@ -61,6 +62,9 @@ def run(fold,model):
     r2_score = metrics.r2_score(y_valid,y_pred)
     mae = metrics.mean_absolute_error(y_valid,y_pred)
     print(f"Fold={fold}, R2_score={r2_score}, MAE={mae}")
+
+    # saving the model
+    joblib.dump(pipe,os.path.join(config.MODEL_OUTPUT,f"model{fold}.bin"))
 
 if __name__ == "__main__":
 
