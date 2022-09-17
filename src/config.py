@@ -1,0 +1,1 @@
+TRAINING_FILE = "input/train_folds.csv"
