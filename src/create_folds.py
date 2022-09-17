@@ -23,6 +23,8 @@ if __name__ == "__main__":
         print(len(t_),len(v_))
         train.loc[v_,'kfold'] = f
     
+    train = train.drop("bins", axis=1)
+
     # save the folds to csv
     train.to_csv("input/train_folds.csv", index=False)
 
