@@ -1,5 +1,3 @@
-from copyreg import pickle
-from pyexpat import model
 import numpy as np
 import pandas as pd
 from sklearn import metrics
@@ -20,14 +18,21 @@ def predict(fold):
     # reading the csv file
     df_test = pd.read_csv(config.TEST_FILE)
 
+    # selecting the target column
     y_test = np.log(df_test['Price'])
 
+    # dropping the target column from the dataframe
     df_test = df_test.drop(columns=['Price'])
 
+    # copying the dataframe to X_test
     X_test = df_test.copy()
 
-    model = joblib.load(os.path.join(config.MODEL_PATH,f"model{fold}.bin"))
-    y_test_pred = model.predict(X_test)
+    # loading the model
+    pipe = joblib.load(os.path.join(config.MODEL_PATH,f"model{fold}.bin"))
+
+    # Predicting for X_test
+    y_test_pred = pipe.predict(X_test)
+    
     print('Prediction of test data')
     r2_score = metrics.r2_score(y_test,y_test_pred)
     mae = metrics.mean_absolute_error(y_test,y_test_pred)

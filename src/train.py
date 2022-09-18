@@ -1,5 +1,3 @@
-from copyreg import pickle
-from pyexpat import model
 import numpy as np
 import pandas as pd
 from sklearn import metrics
@@ -40,18 +38,24 @@ def run(fold,model):
     X_train = df_train.copy()
     X_valid = df_valid.copy()
 
-    # One-Hot-encoding -- STEP1
-    step1 = ColumnTransformer(transformers=[
-        ('col_tnf',OneHotEncoder(sparse=False,drop='first'),[0,1,7,12,13])
+    categorical_cols = [cname for cname in X_train.columns if X_train[cname].dtype == "object"]
+    categorical_transformer = OneHotEncoder(drop='first')
+
+    ohe = ColumnTransformer(transformers=[
+        ('col_tnf',categorical_transformer,categorical_cols),
     ],remainder='passthrough')
+    # # One-Hot-encoding -- STEP1
+    # ohe = ColumnTransformer(transformers=[
+    #     ('col_tnf',OneHotEncoder(sparse=False,drop='first'),[0,1,7,12,13])
+    # ],remainder='passthrough')
 
     # Regression model -- STEP2
-    step2 = model_dispatcher.models[model]
+    reg = model_dispatcher.models[model]
 
     # Creating Pipeline
     pipe = Pipeline([
-        ('step1',step1),
-        ('step2',step2)
+        ('step1',ohe),
+        ('step2',reg)
     ])
 
     # fitting the model
@@ -91,3 +95,9 @@ if __name__ == "__main__":
         fold=args.fold,
         model=args.model
     )
+
+    df_raw = pd.read_csv(config.TRAINING_FILE_RAW_TRAIN)
+
+    # saving the dataframe
+    joblib.dump(df_raw,os.path.join(config.DF_OUTPUT,"df.bin"))
+    

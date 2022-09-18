@@ -1,4 +1,7 @@
+TRAINING_FILE_RAW_TRAIN = "input/train.csv"
 TRAINING_FILE = "input/train_folds.csv"
 TEST_FILE = "input/test.csv"
 MODEL_OUTPUT = "models/"
 MODEL_PATH = "models/"
+DF_OUTPUT = "df/"
+DF_PATH = "df/"
