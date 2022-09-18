@@ -161,4 +161,8 @@ cython_debug/
 
 # input and model
 input/
+<<<<<<< HEAD
 # models/
+=======
+models/
+>>>>>>> ba3328c396d2e984bfc2c8bdd9811ba6b659d174
